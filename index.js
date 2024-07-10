@@ -6,26 +6,64 @@
  */
 
 // Given Parameters
-const vel = 10000; // velocity (km/h)
-const acc = 3; // acceleration (m/s^2)
-const time = 3600; // seconds (1 hour)
-const d = 0; // distance (km)
-const fuel = 5000; // remaining fuel (kg)
-const fbr = 0.5; // fuel burn rate (kg/s)
+const initialVelocityKmH = 10000; // velocity (km/h)
+const accelerationMetersPerSecondSquared = 3; // acceleration (m/s^2)
+const timeSeconds = 3600; // seconds (1 hour)
+const initialDistanceKm = 0; // distance (km)
+const initialFuelKg = 5000; // remaining fuel (kg)
+const fuelBurnRateKgPerSecond = 0.5; // fuel burn rate (kg/s)
+
+// Function to calculate new velocity
+
+const calculateNewVelocity = (initialVelocityKmH, accelerationMetersPerSecondSquared, timeSeconds) => {
+  if(
+    typeof initialVelocityKmH !=="number"||
+    typeof accelerationMetersPerSecondSquared !=="number"||
+    typeof timeSeconds !=="number"
+  ){
+    throw new Error("Invalid parameters. Velocity, acceleration and time must be numbers");
+  }
+  const accelerationKmHPerHour = accelerationMetersPerSecondSquared * 3.6; // convert m/s^2 to km/h^2
+  return initialVelocityKmH +(accelerationKmHPerHour * (timeSeconds/3600)); //convert seconds to hours
+};
+
+//Function to calculate new distance
+const calculateNewDistance = (initialDistanceKm, initialVelocityKmH, timeSeconds) =>{
+  if(
+    typeof initialDistanceKm !=="number" ||
+    typeof initialVelocityKmH !== "number"||
+    typeof timeSeconds !== "number"
+  ){
+    throw new Error("Invalid parameters. Distance, velocity, and time must be numbers.");
+  }
+  return initialDistanceKm + (initialVelocityKmH * (timeSeconds/3600)); //convert seconds to hours
+};
+
+// Function to calculate remaining fuel
+const calculateRemainingFuel = (initialFuelKg, fuelBurnRateKgPerSecond, timeSeconds) => {
+  if(
+    typeof initialFuelKg !== "number"||
+    typeof fuelBurnRateKgPerSecond !=="number"||
+    typeof timeSeconds !=="number"
+  ){
+    throw new Error("Invalid parameters. Fuel, BurnRate, and time must be numbers.");
+  }
+  const remainingFuelKg = initialFuelKg - (fuelBurnRateKgPerSecond * timeSeconds);
+  if(remainingFuelKg < 0){
+    throw new Error("Fuel cannot be negative. Check fuel burn rate and time");
+  }
+  return remainingFuelKg;
+};
+
+//Perform calculations
+const newDistanceKm = calculateNewDistance(initialDistanceKm, initialVelocityKmH, timeSeconds);
+const newVelocityKmH = calculateNewVelocity( initialVelocityKmH, accelerationMetersPerSecondSquared, timeSeconds);
+const remainingFuelKg= calculateRemainingFuel(initialFuelKg, fuelBurnRateKgPerSecond, timeSeconds);
 
 
-const d2 = d + (vel*time) //calcultes new distance
-const rf = fbr*time //calculates remaining fuel
-const vel2 = calcNewVel(acc, vel, time) //calculates new velocity based on acceleration
-
-// Pick up an error with how the function below is called and make it robust to such errors
-calcNewVel = (vel, acc, time) => { 
-  return vel + (acc*time)
-}
-
-console.log(`Corrected New Velocity: ${vel2} km/h`);
-console.log(`Corrected New Distance: ${d2} km`);
-console.log(`Corrected Remaining Fuel: ${rf} kg`);
+console.log(`New Velocity: ${newVelocityKmH} km/h`);
+console.log(`New Distance: ${newDistanceKm} km`);
+console.log(`Remaining Fuel: ${remainingFuelKg} kg`);
 
 
 
