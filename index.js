@@ -23,9 +23,10 @@ const calculateNewVelocity = (initialVelocityKmH, accelerationMetersPerSecondSqu
   ){
     throw new Error("Invalid parameters. Velocity, acceleration and time must be numbers");
   }
-  const accelerationKmHPerHour = accelerationMetersPerSecondSquared * 3.6; // convert m/s^2 to km/h^2
-  return initialVelocityKmH +(accelerationKmHPerHour * (timeSeconds/3600)); //convert seconds to hours
-};
+  const accelerationKmHPerHour = accelerationMetersPerSecondSquared * 12960; // convert m/s^2 to km/h^2
+  const newVelocity  = initialVelocityKmH +(accelerationKmHPerHour * (timeSeconds/3600)); //convert seconds to hours
+  return newVelocity;
+}
 
 //Function to calculate new distance
 const calculateNewDistance = (initialDistanceKm, initialVelocityKmH, timeSeconds) =>{
